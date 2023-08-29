@@ -1,99 +1,17 @@
+from Models.PostOffice import PostOffice
 from Scraper.PostScraper import PostScraper
+import pickle
+import os
+import json
 
-# TODO: Move the list to a dedicated file
-post_offices_search_queries = [
-    "Milano",
-    "Affori Milano",
-    "Arzaga Milano",
-    "Baggio Milano",
-    "Barona Milano",
-    "Bicocca Milano",
-    "Boldinasco Milano",
-    "Bottonuto Milano",
-    "Bovisa Milano",
-    "Bovisasca Milano",
-    "Bruzzano Milano",
-    "Cagnola Milano",
-    "Calvairate Milano",
-    "Quartiere Campo dei Fiori Milano",
-    "Cascina Merlata Milano",
-    "Casoretto Milano",
-    "Cavriano Milano",
-    "Chiaravalle Milano",
-    "Chiesa Rossa Milano",
-    "Cimiano Milano",
-    "Città Studi Milano",
-    "Comasina Milano",
-    "Conca del Naviglio Milano",
-    "Corvetto Milano",
-    "Crescenzago Milano",
-    "Dergano Milano",
-    "Figino Milano",
-    "Quartiere Forlanini Milano",
-    "Gallaratese Milano",
-    "Garegnano Milano",
-    "Ghisolfa Milano",
-    "Gorla Milano",
-    "Gratosoglio Milano",
-    "Greco Milano",
-    "Isola Milano",
-    "Lambrate Milano",
-    "Lampugnano Milano",
-    "Lorenteggio Milano",
-    "Macconago Milano",
-    "Maggiolina Milano",
-    "Monluè Milano",
-    "Montalbino Milano",
-    "Morivione Milano",
-    "Morsenchio Milano",
-    "Muggiano Milano",
-    "Musocco Milano",
-    "Niguarda Milano",
-    "Nolo Milano",
-    "Nosedo Milano",
-    "Quartiere degli Olmi Milano",
-    "Ortica Milano",
-    "Ponte Lambro Milano",
-    "Porta Genova Milano",
-    "Portello Milano",
-    "Porto di Mare Milano",
-    "Prato Centenaro Milano",
-    "Precotto Milano",
-    "Progetto Porta Nuova Milano",
-    "QT8 Milano",
-    "Quadrilatero della moda Milano",
-    "Quarto Cagnino Milano",
-    "Quarto Oggiaro Milano",
-    "Quinto Romano Milano",
-    "Quintosole Milano",
-    "Rogoredo Milano",
-    "Ronchetto delle Rane Milano",
-    "Ronchetto sul Naviglio Milano",
-    "Roserio Milano",
-    "Rottole Milano",
-    "San Leonardo Milano",
-    "San Siro Milano",
-    "Quartiere Sant'Ambrogio Milano",
-    "Santa Giulia Milano",
-    "Segnano Milano",
-    "Sella Nuova Milano",
-    "Selvanesco Milano",
-    "Quartiere Stadera Milano",
-    "Taliedo Milano",
-    "Ticinese Milano",
-    "Trenno Milano",
-    "Turro Milano",
-    "Vaiano Valle Milano",
-    "Quartiere Varesina Milano",
-    "Vialba Milano",
-    "Vigentino Milano",
-    "Villaggio dei Giornalisti Milano",
-    "Villapizzone Milano",
-    "Paolo Sarpi Milano",
-    "Tortona Milano"
-]
-
-scraper = PostScraper(timeout=10)
+with open('Scraper/milan_neighborhoods.json', 'r') as milan_neighborhoods:
+  post_offices_search_queries = json.load(milan_neighborhoods)
 
 post_offices = []
-post_offices += scraper.scrape_post_offices(post_offices_search_queries)
+
+if os.path.exists("post_offices.pkl"):
+    with open("post_offices.pkl", "rb") as post_offices_file:
+        post_offices = pickle.load(post_offices_file)
+else:
+    scraper = PostScraper(timeout=10)
+    post_offices += scraper.scrape_post_offices(post_offices_search_queries)
