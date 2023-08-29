@@ -23,3 +23,6 @@ class PostOffice:
             'domenica':'CHIUSO'
         }
         self.citta: str = ""
+
+    def __str__(self):
+        return f"{{'nome': '{self.nome}', 'tipo_punto': '{self.tipo_punto}', 'indirizzo': '{self.indirizzo}', 'città': '{self.citta}', 'telefono': '{self.telefono}', 'fax': '{self.fax}', 'servizi': {self.servizi}, 'orari': {self.orari}}}"

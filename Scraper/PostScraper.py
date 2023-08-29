@@ -1,3 +1,5 @@
+import pickle
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
@@ -8,6 +10,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException
 import re
 import time
+import os
 
 from Models.PostOffice import PostOffice
 
@@ -16,6 +19,9 @@ class PostScraper:
 
     """
         PostScraper constructor.
+
+        Input:
+            - timeout: the default timeout for the html elements retrieve
 
         Initializes:
             - default_url: the default url of Poste Italiane web page for post offices search
@@ -306,6 +312,17 @@ class PostScraper:
         Returns:
             - an array of post offices
     """
+    def __remove_duplicates(self, post_offices):
+        result = []
+        seen_names = set()
+
+        for post_office in post_offices:
+            if post_office.nome not in seen_names:
+                result.append(post_office)
+                seen_names.add(post_office.nome)
+
+        return result
+
     def scrape_post_offices(self, post_offices_search_queries):
 
         # get the Poste Italiane web page
@@ -319,7 +336,6 @@ class PostScraper:
         self.__filter_point_type()
 
         for post_offices_search_query in post_offices_search_queries:
-
             self.__fill_search_field(post_offices_search_query)
             time.sleep(self.timeout)
 
@@ -333,6 +349,14 @@ class PostScraper:
 
             self.__scroll_page()
 
-            post_offices += self.__extract_post_data(post_offices_counter)
+            query_post_offices = self.__extract_post_data(post_offices_counter)
+
+            post_offices += query_post_offices
+
+        post_offices = self.__remove_duplicates(post_offices)
+
+        with open("post_offices.pkl", 'wb') as fp:
+            pickle.dump(post_offices, fp)
+            print('saved successfully to file post_offices.pkl')
 
         return post_offices
