@@ -42,7 +42,7 @@ class Graph(object):
         """
         vertex1, vertex2 = tuple(edge)
         if vertex1 in self._graph_dict:
-            self._graph_dict[vertex1].add(vertex2)
+            self._graph_dict[vertex1].append(vertex2)
         else:
             self._graph_dict[vertex1] = [vertex2]
 
@@ -55,8 +55,8 @@ class Graph(object):
         edges = []
         for vertex in self._graph_dict:
             for neighbour in self._graph_dict[vertex]:
-                if [neighbour, vertex] not in edges:
-                    edges.append([vertex, neighbour])
+                if (neighbour, vertex) not in edges:
+                    edges.append((vertex, neighbour))
         return edges
 
     def __iter__(self):
@@ -68,10 +68,12 @@ class Graph(object):
         return next(self._iter_obj)
 
     def __str__(self):
-        res = "vertices: "
+        res = "vertices: ["
         for k in self._graph_dict:
             res += str(k) + " "
-        res += "\nedges: "
+        res += "]"
+        res += "\nedges: ["
         for edge in self.__generate_edges():
-            res += str(edge) + " "
+            res += '[' + str(edge[0]) + ', ' + str(edge[1]) + ']' + ", "
+        res += "]"
         return res
