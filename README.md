@@ -1,2 +1,2 @@
-# milanet
-Data integration between Milan's public transportation network and Poste Italiane
+# MilaNet
+a data integration project between Milan's public transportation network and Poste Italiane
